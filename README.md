@@ -15,12 +15,11 @@ Este projeto foi desenvolvido para a disciplina **Data Structure Strategy and Im
 
 ## 🧪 Tecnologias Utilizadas
 
-- ![RUST](https://img.shields.io/badge/Rust-DEA584?style=for-the-badge&logo=Rust&logoColor=0F1923)
+- Linguagem: `Rust`
 - Ferramenta de testes: `cargo test`
-- ![VSCODE](https://img.shields.io/badge/VSCODE-DEA584?style=for-the-badge&logo=VisualStudio&logoColor=0F1923)
+- Ambiente de desenvolvimento: `VSCode`
 
----
-
+  
 ## 🚀 Como Executar o Projeto
 - Instalar o Rust em sua máquina (https://www.rust-lang.org/pt-BR/tools/install)
 - Para rodar os teste, execute o comando: cargo test
