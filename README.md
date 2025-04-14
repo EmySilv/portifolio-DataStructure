@@ -25,7 +25,8 @@ Este projeto foi desenvolvido para a disciplina **Data Structure Strategy and Im
 - Para rodar os teste, execute o comando: cargo test
 - Para exibir o resultado das métricas, execute o comando: cargo run
 
-### 1. Clone o repositório
+
+## 💻 Clone o repositório
 Em um terminal CMD, PowerShell ou Git Bash, execute os seguintes comando:
 - git clone https://github.com/EmySilv/portifolio-DataStructure.git
 - cd portifolio-DataStructure
