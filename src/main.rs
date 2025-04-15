@@ -3,17 +3,17 @@ struct RegistroVenda {
     valor: f64,
 }
 
-fn calcular_media(valores: &[f64]) -> f64 {
+fn calc_media(valores: &[f64]) -> f64 {
     let soma: f64 = valores.iter().sum();
     soma / valores.len() as f64
 }
 
-fn calcular_inclinacao(dados: &[RegistroVenda]) -> f64 {
+fn calc_inclinacao(dados: &[RegistroVenda]) -> f64 {
     let meses: Vec<f64> = dados.iter().map(|d| d.mes).collect();
     let valores: Vec<f64> = dados.iter().map(|d| d.valor).collect();
 
-    let media_meses = calcular_media(&meses);
-    let media_valores = calcular_media(&valores);
+    let media_meses = calc_media(&meses);
+    let media_valores = calc_media(&valores);
 
     let numerador: f64 = dados
         .iter()
@@ -25,9 +25,9 @@ fn calcular_inclinacao(dados: &[RegistroVenda]) -> f64 {
     numerador / denominador
 }
 
-fn calcular_intercepto(dados: &[RegistroVenda], inclinacao: f64) -> f64 {
-    let media_meses = calcular_media(&dados.iter().map(|d| d.mes).collect::<Vec<f64>>());
-    let media_valores = calcular_media(&dados.iter().map(|d| d.valor).collect::<Vec<f64>>());
+fn calc_intercepto(dados: &[RegistroVenda], inclinacao: f64) -> f64 {
+    let media_meses = calc_media(&dados.iter().map(|d| d.mes).collect::<Vec<f64>>());
+    let media_valores = calc_media(&dados.iter().map(|d| d.valor).collect::<Vec<f64>>());
     media_valores - (inclinacao * media_meses)
 }
 
@@ -35,7 +35,7 @@ fn prever_valor(intercepto: f64, inclinacao: f64, mes: f64) -> f64 {
     intercepto + (inclinacao * mes)
 }
 
-fn calcular_mse(dados: &[RegistroVenda], inclinacao: f64, intercepto: f64) -> f64 {
+fn calc_mse(dados: &[RegistroVenda], inclinacao: f64, intercepto: f64) -> f64 {
     let erro_quadratico: f64 = dados
         .iter()
         .map(|d| {
@@ -46,8 +46,8 @@ fn calcular_mse(dados: &[RegistroVenda], inclinacao: f64, intercepto: f64) -> f6
     erro_quadratico / dados.len() as f64
 }
 
-fn calcular_r2(dados: &[RegistroVenda], inclinacao: f64, intercepto: f64) -> f64 {
-    let media_valores = calcular_media(&dados.iter().map(|d| d.valor).collect::<Vec<f64>>());
+fn calc_r2(dados: &[RegistroVenda], inclinacao: f64, intercepto: f64) -> f64 {
+    let media_valores = calc_media(&dados.iter().map(|d| d.valor).collect::<Vec<f64>>());
     let ss_total: f64 = dados
         .iter()
         .map(|d| (d.valor - media_valores).powi(2))
@@ -78,12 +78,12 @@ fn main() {
         },
     ];
 
-    let inclinacao = calcular_inclinacao(&dados_vendas);
-    let intercepto = calcular_intercepto(&dados_vendas, inclinacao);
+    let inclinacao = calc_inclinacao(&dados_vendas);
+    let intercepto = calc_intercepto(&dados_vendas, inclinacao);
     let previsao = prever_valor(intercepto, inclinacao, 6.0);
 
-    let mse = calcular_mse(&dados_vendas, inclinacao, intercepto);
-    let r2 = calcular_r2(&dados_vendas, inclinacao, intercepto);
+    let mse = calc_mse(&dados_vendas, inclinacao, intercepto);
+    let r2 = calc_r2(&dados_vendas, inclinacao, intercepto);
 
     println!(
         "Inclinação: {:.2}, Intercepto: {:.2}",
@@ -98,37 +98,37 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_calcular_media() {
+    fn test_calc_media() {
         let valores = vec![1.0, 2.0, 3.0, 4.0, 5.0];
-        let resultado = calcular_media(&valores);
+        let resultado = calc_media(&valores);
         assert_eq!(resultado, 3.0);
     }
 
     #[test]
-    fn test_calcular_media_iguais() {
+    fn test_calc_media_iguais() {
         let valores = vec![9.0, 9.0, 9.0, 9.0, 9.0];
-        let resultado = calcular_media(&valores);
+        let resultado = calc_media(&valores);
         assert_eq!(resultado, 9.0);
     }
 
     #[test]
-    fn test_calcular_media_unico_valor() {
+    fn test_calc_media_unico_valor() {
         let valores = vec![5.0];
-        let resultado = calcular_media(&valores);
+        let resultado = calc_media(&valores);
         assert_eq!(resultado, 5.0);
     }
 
     #[test]
-    fn test_calcular_media_negativos() {
+    fn test_calc_media_negativos() {
         let valores = vec![-2.0, -4.0, -6.0];
-        let resultado = calcular_media(&valores);
+        let resultado = calc_media(&valores);
         assert_eq!(resultado, -4.0);
     }
 
     #[test]
-    fn test_calcular_media_negativos_positivos() {
+    fn test_calc_media_negativos_positivos() {
         let valores = vec![-2.0, 4.0];
-        let resultado = calcular_media(&valores);
+        let resultado = calc_media(&valores);
         assert_eq!(resultado, 1.0);
     }
 
@@ -148,23 +148,23 @@ mod tests {
             RegistroVenda { mes: 2.0, valor: 4.0 },
             RegistroVenda { mes: 3.0, valor: 6.0 },
         ];
-        let inclinacao = calcular_inclinacao(&dados);
-        let intercepto = calcular_intercepto(&dados, inclinacao);
-        let mse = calcular_mse(&dados, inclinacao, intercepto);
-        let r2 = calcular_r2(&dados, inclinacao, intercepto);
+        let inclinacao = calc_inclinacao(&dados);
+        let intercepto = calc_intercepto(&dados, inclinacao);
+        let mse = calc_mse(&dados, inclinacao, intercepto);
+        let r2 = calc_r2(&dados, inclinacao, intercepto);
 
         assert!(mse < 1e-6); 
         assert!((r2 - 1.0).abs() < 1e-6); 
     }
 
     #[test]
-    fn test_calcular_inclinacao_simples() {
+    fn test_calc_inclinacao_simples() {
         let dados = vec![
             RegistroVenda { mes: 1.0, valor: 2.0 },
             RegistroVenda { mes: 2.0, valor: 4.0 },
             RegistroVenda { mes: 3.0, valor: 6.0 },
         ];
-        let resultado = calcular_inclinacao(&dados);
+        let resultado = calc_inclinacao(&dados);
         let esperado = 2.0;
         assert!(
             (resultado - esperado).abs() < 1e-6,
@@ -175,14 +175,14 @@ mod tests {
     }
 
     #[test]
-    fn test_calcular_intercepto_simples() {
+    fn test_calc_intercepto_simples() {
         let dados = vec![
             RegistroVenda { mes: 1.0, valor: 3.0 },
             RegistroVenda { mes: 2.0, valor: 5.0 },
             RegistroVenda { mes: 3.0, valor: 7.0 },
         ];
-        let inclinacao = calcular_inclinacao(&dados);
-        let resultado = calcular_intercepto(&dados, inclinacao);
+        let inclinacao = calc_inclinacao(&dados);
+        let resultado = calc_intercepto(&dados, inclinacao);
         let esperado = 1.0; 
         assert!(
             (resultado - esperado).abs() < 1e-6,
